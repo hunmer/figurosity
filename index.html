@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>figurosity - beta</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="Content-Security-Policy" content="block-all-mixed-content">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="keywords" contect="poseman,figurosity">
+		<meta name="description" contect="online pose vierer">
+		<meta name="Author" contect="liaoyanjie2000@gmail.com">
+        <meta name="full-screen" content="yes">
+        <meta name="browsermode" content="application">
+        <meta name="x5-fullscreen" content="true">
+        <meta name="x5-page-mode" content="app">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/materialize.min.css">
+        <link rel="stylesheet" href="css/x0popup.min.css">
+        <link rel="stylesheet" href="font/icon.css">
+        <link rel="stylesheet" href="css/index.css">
+    </head>
+    <body>
+        <div class="modal" id="modal_fitler">
+            <div class="modal-content">
+                <div class="divider"></div>
+                <div class="section" id="ps_models" data-mult=true>
+                    <h5>MODELS</h5>
+                    <div class="chips chips-placeholder"></div>
+                    <select>
+                        <option>Cara</option>
+                        <option>Victoria</option>
+                        <option>Lee</option>
+                        <option>Mei Lin</option>
+                        <option>Olympia</option>
+                        <option>Tyler</option>
+                        <option>Sue</option>
+                        <option>Ashley</option>
+                        <option>George</option>
+                        <option>Elizabeth</option>
+                        <option>Monique</option>
+                        <option>Lee lou</option>
+                        <option>Aurora</option>
+                        <option>Zander</option>
+                        <option>Jake</option>
+                        <option>Sarah</option>
+                        <option>William</option>
+                        <option>Floyd</option>
+                        <option>Denise</option>
+                        <option>Kiera</option>
+                        <option>Tiny</option>
+                        <option>Cameron</option>
+                        <option>Junko</option>
+                        <option>Becky</option>
+                        <option>Nai Nai</option>
+                        <option>Marcus</option>
+                        <option>Priya</option>
+                        <option>Zane</option>
+                        <option>Titan</option>
+                        <option>Asato</option>
+                    </select>
+                </div>
+                <div class="divider"></div>
+                <div class="section" id="ps_cameras" data-mult=true>
+                    <h5>CAMERAS</h5>
+                    <div class="chips chips-placeholder"></div>
+                    <select>
+                        <option>Default</option>
+                        <option>Down</option>
+                        <option>Up</option>
+                    </select>
+                </div>
+                <div class="divider"></div>
+                <div class="section" id="ps_gender" data-mult=true>
+                    <h5>GENDER</h5>
+                    <div class="chips chips-placeholder"></div>
+                    <select>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+                <div class="divider"></div>
+                <div class="section" id="ps_style" data-mult=true>
+                    <h5>STYLE</h5>
+                    <div class="chips chips-placeholder"></div>
+                    <select>
+                        <option>Martial Art</option>
+                        <option>Sensual</option>
+                        <option>Superhero</option>
+                        <option>Casual</option>
+                        <option>Action</option>
+                        <option>Combat</option>
+                        <option>Pinup</option>
+                        <option>Fantasy</option>
+                        <option>Gymnastics</option>
+                        <option>Figure drawing</option>
+                        <option>Horror</option>
+                    </select>
+                </div>
+                <div class="divider"></div>
+                <div class="section" id="ps_action" data-mult=true>
+                    <h5>ACTION</h5>
+                    <div class="chips chips-placeholder"></div>
+                    <select>
+                        <option>Riding</option>
+                        <option>Flying</option>
+                        <option>Jumping</option>
+                        <option>Punching</option>
+                        <option>Fighting</option>
+                        <option>Floating</option>
+                        <option>Dancing</option>
+                        <option>Kneeling</option>
+                        <option>Kicking</option>
+                        <option>Lying</option>
+                        <option>Runing</option>
+                        <option>Crouching</option>
+                        <option>Sitting</option>
+                        <option>Standing</option>
+                        <option>Kneeling</option>
+                        <option>Kicking</option>
+                        <option>Lying</option>
+                        <option>Running</option>
+                        <option>Crouching</option>
+                        <option>Sitting</option>
+                        <option>Standing</option>
+                        <option>Walking</option>
+                        <option>Squating</option>
+                        <option>Strtching</option>
+                        <option>Bending</option>
+                        <option>Handstand</option>
+                        <option>Falling</option>
+                        <option>Lunging</option>
+                    </select>
+                </div>
+                <div class="divider"></div>
+                <div class="section" id="ps_props" data-mult=true>
+                    <h5>PROPS</h5>
+                    <div class="chips chips-placeholder"></div>
+                    <select>
+                        <option>Skateboard</option>
+                        <option>Hands Empty</option>
+                        <option>Gun</option>
+                        <option>Bow</option>
+                        <option>Coffee Cup</option>
+                        <option>Sword</option>
+                        <option>Staff</option>
+                        <option>Chair</option>
+                        <option>Balance Beam</option>
+                    </select>
+                </div>
+                <div class="divider"></div>
+                <div class="section text-center" id="ps_models" data-mult=true>
+                    <a class="modal-close waves-effect waves-light btn-large" href="javascript: pose_search();" id="btn-search">Search</a>
+                    <a class="waves-effect waves-light btn-large" href="javascript: reset_fitler();" id="btn-search">Reset</a>
+                </div>
+            </div>
+        </div>
+        <div class="container hide" id="pose-search">
+            <div class="_flex_navbar teal lighten-2">
+                <a href="javascript: showUI('main')" class="modal-trigger">
+                    <i class="material-icons medium">arrow_back</i>
+                </a>
+                <a href="#modal_fitler" class="modal-trigger">
+                    <i class="material-icons right medium">search</i>
+                </a>
+                <span id="_count" class="text-center">Loading...</span>
+                <div class="divider"></div>
+            </div>
+            <div class="row" id="_list"></div>
+        </div>
+        <div class="container text-center hide" id="ui_viewer">
+            <div id="viewer">
+                <span id='_sec-next' class="hide">3</span>
+                <span class="left" id='_playSec'></span>
+                <a class='dropdown-trigger btn right' href='#' data-target='dropdown1'>Skin</a>
+                <!-- <a class='dropdown-trigger btn right' href='#' data-target='dropdown2'>Camera</a> -->
+                <ul id='dropdown1' class='dropdown-content'>
+                    <li>
+                        <a href="javascript: setModel('normal')">Dressed</a>
+                    </li>
+                    <li>
+                        <a href="javascript: setModel('nude')">Nude</a>
+                    </li>
+                    <li>
+                        <a href="javascript: setModel('muscle')">Muscle</a>
+                    </li>
+                    <li>
+                        <a href="javascript: setModel('smooth')">Smooth</a>
+                    </li>
+                </ul>
+                <!-- <ul id='dropdown2' class='dropdown-content'>
+		    <li><a href="javascript: setEyeLevel('Street')">Street</a></li>
+		    <li><a href="javascript: setEyeLevel('Bird')">Bird's</a></li>
+		    <li><a href="javascript: setEyeLevel('Worm')">Worm's</a></li>
+		  </ul>		 -->
+                <img src="">
+            </div>
+            <div class="row _control">
+                <div class="_header">
+                    <span class="col s1" id='_index'></span>
+                    <span class="col s10 _title"></span>
+                    <span class="col s1" id='_sec'>10</span>
+                </div>
+                <div class="col s1">
+                    <i class="material-icons" onclick="offset_prev();">arrow_back</i>
+                </div>
+                <div class="col s10">
+                    <p class="range-field">
+                        <input type="range" id="range" min="0" max="32" onchange="event_rangeChange();" oninput="event_rangeChange(true);"/>
+                    </p>
+                </div>
+                <div class="col s1">
+                    <i class="material-icons" onclick="offset_next();">arrow_forward</i>
+                </div>
+                <div class="col s2">
+                    <i class="material-icons" id='favorite' onclick="favorite($('favorite'));">favorite_border</i>
+                </div>
+                <div class="col s2">
+                    <i class="material-icons" onclick="prev_pose()">arrow_back</i>
+                </div>
+                <div class="col s2">
+                    <i class="material-icons" id='pause' onclick="stop();">pause</i>
+                </div>
+                <div class="col s2">
+                    <i class="material-icons" onclick="next_pose();">arrow_forward</i>
+                </div>
+                <div class="col s2">
+                    <i class="material-icons" onclick="alert('TODO')">file_download</i>
+                </div>
+                <div class="col s2">
+                    <i class="material-icons" onclick="quickPose_end();showUI(g_s_ui_last);">exit_to_app</i>
+                </div>
+            </div>
+        </div>
+        <div class="container blue lighten-1 text-center" id='main'>
+            <div class="row">
+                <div class="col s12">figurosity</div>
+                <div class="col s6" onclick="_view('quick-pose');">1> QUICK POSES</div>
+                <div class="col s6" onclick="_view('pose-search');">2> POSE SEARCH</div>
+            </div>
+        </div>
+        <div class="container text-center hide" id="quick-pose">
+            <div class="divider"></div>
+            <div class="section" id="durations" data-mult=false>
+                <h5>DURATIONS</h5>
+                <div class="row">
+                    <div class="col s2" data-sec=15>15s</div>
+                    <div class="col s2" data-sec=30>30s</div>
+                    <div class="col s2" data-sec=60>60s</div>
+                    <div class="col s2" data-sec=120>2 m</div>
+                    <div class="col s2" data-sec=300>5 m</div>
+                    <div class="col s2" id="_custom-time" onclick="confirm_setCustomTime()">diy</div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="section" id="camera_angle" data-mult=true>
+                <h5>CAMERA ANGLE</h5>
+                <div class="row">
+                    <div class="col s4">
+                        <img src="images/street Level.jpg" alt="street Level">
+                        <p>street Level</p>
+                    </div>
+                    <div class="col s4">
+                        <img src="images/brid's Eye.jpg" alt="brid's Eye">
+                        <p>brid's Eye</p>
+                    </div>
+                    <div class="col s4">
+                        <img src="images/Worm's Eye.jpg" alt="Worm's Eye">
+                        <p>Worm's Eye</p>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="divider"></div>
+		<div class="section" id="pose_direction" data-mult=true>
+			    <h5>POSE DIRECTION</h5>
+				<div class="row">
+	      <div class="col s4">Back</div>
+	      <div class="col s4">Side</div>
+	      <div class="col s4">Front</div>
+	    </div>	
+			  </div>	  -->
+            <div class="divider"></div>
+            <div class="section" id="models" data-mult=true>
+                <h5>MODELS</h5>
+                <div class="row">
+                    <div class="col s3">
+                        <img class="circle" src="images/normal.jpg" alt="Dressed">
+                        <p>Dressed</p>
+                    </div>
+                    <div class="col s3">
+                        <img class="circle" src="images/nude.jpg" alt="Nude">
+                        <p>Nude</p>
+                    </div>
+                    <div class="col s3">
+                        <img class="circle" src="images/muscle.jpg" alt="Muscle">
+                        <p>Muscle</p>
+                    </div>
+                    <div class="col s3">
+                        <img class="circle" src="images/smooth.jpg" alt="Smooth">
+                        <p>Smooth</p>
+                    </div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="section" id="gender" data-mult=true>
+                <h5>GENDER</h5>
+                <div class="row">
+                    <div class="col s6">
+                        <img src="images/mars.svg" alt="Male">
+                        <p>Male</p>
+                    </div>
+                    <div class="col s6">
+                        <img src="images/venus.svg" alt="Female">
+                        <p>Female</p>
+                    </div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <!-- <div class="section" id="light_direction" data-mult=true>
+			    <h5>LIGHT DIRECTION</h5>
+				<div class="row">
+			      <div class="col s6">
+			      	<img src="images/light-left.svg" alt="Left">
+			      	<p>Left</p>
+			      </div>
+<div class="col s6">
+			      	<img src="images/light-right.svg" alt="Right">
+			      	<p>Right</p>
+			      </div>			      		      
+			    </div>	    
+			  </div> -->
+            <div class="divider"></div>
+            <div class="row" data-disable="true">
+                <div class="col s12" data-disable="true">
+                	<a class="waves-effect waves-light btn-large" href="javascript: showUI('main');">BACK</a>
+                    <a class="waves-effect waves-light btn-large" href="javascript: quickPose_preload();" id="btn-start">START</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/until.js"></script>
+    <script src="js/x0popup.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/imagesloaded.min.js"></script>
+    <script src="js/index.js"></script>
+</html>

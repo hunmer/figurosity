@@ -9,6 +9,8 @@
 
 #viewer img {
     height: 500px;
+    max-width: 500px;
+    max-height: 500px;
     position: absolute;
     margin: auto;
     left: 0;
@@ -27,6 +29,7 @@
 }
 
 ._control {
+	width: 100%;
 	padding: 10px;
 	position: fixed;
 	z-index: 999;

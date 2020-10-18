@@ -1,2 +1,2 @@
 # figurosity
- a simple pose viewer
+[a simple pose viewer](https://hunmer.github.io/figurosity/)

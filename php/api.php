@@ -20,31 +20,7 @@
 			// exit(file_get_contents('pose-search.json'));
 			$url = 'https://api.figurosity.com/public/v1/poses';
 			break;
-
-		case 'dogs':
-			// exit(file_get_contents('pose-search.json'));
-			$url = 'https://api.figurosity.com/public/v1/styles/poses/dogs';
-			break;
-
-		case 'girls-with-guns-poses':
-			// exit(file_get_contents('pose-search.json'));
-			$url = 'https://api.figurosity.com/public/v1/styles/poses/girls-with-guns-poses';
-			break;		
-
-		case 'superhero-poses':
-			// exit(file_get_contents('pose-search.json'));
-			$url = 'https://api.figurosity.com/public/v1/styles/poses/superhero-poses';
-			break;				
-
-		case 'martial-arts-poses':
-			// exit(file_get_contents('pose-search.json'));
-			$url = 'https://api.figurosity.com/public/v1/styles/poses/martial-arts-poses';
-			break;	
-			
-		case 'horses':
-			// exit(file_get_contents('pose-search.json'));
-			$url = 'https://api.figurosity.com/public/v1/styles/poses/horses';
-			break;				
+		
 		default:
 			exit();
 	}

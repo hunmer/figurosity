@@ -1,5 +1,6 @@
 <?php
-
+	header("Access-Control-Allow-Origin: *");
+	
 	// $_GET = [
 	// 	'type' => 'quick-pose',
 	// 	'data' => '{"states":["normal"],"gender":[111],"cameras":[1,2,3],"museCount":"single","count":30}'

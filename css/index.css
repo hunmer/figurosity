@@ -97,6 +97,7 @@ img {
 }
 
 #main .row .col {
+	cursor: pointer;
 	padding: 10px;
 	border: 1px solid black;
 }
@@ -123,4 +124,39 @@ img {
     font-size: 30px;
     top: 10px;
     position: inherit;
+}
+
+#_status i {
+	vertical-align: -webkit-baseline-middle;
+}
+
+.mirrorRotateLevel {          /* 水平镜像翻转 */
+	transform: rotateY(180deg) !important; 
+    -moz-transform:scaleX(-1) !important;
+    -webkit-transform:scaleX(-1) !important;
+    -o-transform:scaleX(-1) !important;
+    transform:scaleX(-1) !important;
+    /*兼容IE*/
+    filter:FlipH !important;;
+}
+.mirrorRotateVertical {        /* 垂直镜像翻转 */
+	 transform: rotateX(180deg) !important;
+    -moz-transform:scaleY(-1) !important;
+    -webkit-transform:scaleY(-1) !important;
+    -o-transform:scaleY(-1) !important;
+    transform:scaleY(-1) !important;
+    /*兼容IE*/
+    filter:FlipV !important;
+}
+
+#modal_setting {
+	min-height: 300px;
+}
+
+#modal_setting select {
+	margin-top: 10px;
+}
+
+a[data-target='dropdown1'] {
+	z-index: 999;
 }

@@ -19,10 +19,37 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/materialize.min.css">
         <link rel="stylesheet" href="css/x0popup.min.css">
+        <link rel="stylesheet" href="css/hsycmsAlert.css">
         <link rel="stylesheet" href="font/icon.css">
         <link rel="stylesheet" href="css/index.css">
     </head>
     <body>
+        <div class="modal" id="modal_setting">
+            <div class="modal-content">
+             <div class="input-field col s12">
+                  <select id="Image-Size">
+                  <option value="" disabled >Choose your option</option>
+                  <option value="512">512</option>
+                  <option value="900">900</option>
+                  <option value="2048">2048</option>
+                </select>
+                <label>Image-Size</label>
+            </div>
+         <div class="input-field col s12">
+                        <select id="Thumb-Image-Size">
+                          <option value="" disabled >Choose your option</option>
+                          <option value="100">100</option>
+                          <option value="512">512</option>
+                          <option value="900">900</option>
+                          <option value="2048">2048</option>
+                        </select>
+                        <label>Thumb-Image-Size</label>
+                    </div>            
+                </div>
+                <div class="modal-footer">
+      <a href="javascript: applySetting()" class="modal-close waves-effect waves-green btn-flat">Apply</a>
+    </div>
+        </div>
         <div class="modal" id="modal_fitler">
             <div class="modal-content">
                 <div class="divider"></div>
@@ -173,20 +200,40 @@
         <div class="container text-center hide" id="ui_viewer">
             <div id="viewer">
                 <span id='_sec-next' class="hide">3</span>
-                <span class="left" id='_playSec'></span>
+                <div class="row" id="_status">
+                    <div class="col s2">
+                        <span id='_playSec'></span>
+                    </div>
+                    <div class="col s2" onclick="turnRight()">
+                        <i class="material-icons">rotate_left</i>
+                    </div>
+                     <div class="col s2" onclick="spturn()">
+                        <i class="material-icons">rotate_90_degrees_ccw</i>
+                    </div> 
+                    <div class="col s2" onclick="czturn()">
+                        <i class="material-icons mirrorRotateLevel">rotate_90_degrees_ccw</i>
+                    </div>                                      
+                    <div class="col s2" onclick="turnLeft()">
+                        <i class="material-icons">rotate_right</i>
+                    </div>  
+                    <div clsas="col s2" onclick="openModal('#modal_setting')">
+                        <i class="material-icons">settings</i>
+
+                    </div>                           
+                </div>
                 <a class='dropdown-trigger btn right' href='#' data-target='dropdown1'>Skin</a>
                 <!-- <a class='dropdown-trigger btn right' href='#' data-target='dropdown2'>Camera</a> -->
                 <ul id='dropdown1' class='dropdown-content'>
-                    <li>
+                    <li data-value='normal'>
                         <a href="javascript: setModel('normal')">Dressed</a>
                     </li>
-                    <li>
+                    <li data-value='nude'>
                         <a href="javascript: setModel('nude')">Nude</a>
                     </li>
-                    <li>
+                    <li data-value='muscle'>
                         <a href="javascript: setModel('muscle')">Muscle</a>
                     </li>
-                    <li>
+                    <li data-value='smooth'>
                         <a href="javascript: setModel('smooth')">Smooth</a>
                     </li>
                 </ul>
@@ -195,13 +242,15 @@
 		    <li><a href="javascript: setEyeLevel('Bird')">Bird's</a></li>
 		    <li><a href="javascript: setEyeLevel('Worm')">Worm's</a></li>
 		  </ul>		 -->
-                <img src="">
+                <img>
             </div>
             <div class="row _control">
                 <div class="_header">
                     <span class="col s1" id='_index'></span>
-                    <span class="col s10 _title"></span>
-                    <span class="col s1" id='_sec'>10</span>
+                    <span class="col s9 _title">
+                                          
+                    </span>
+                    <span class="col s2" id='_sec'>10</span>
                 </div>
                 <div class="col s1">
                     <i class="material-icons" onclick="offset_prev();">arrow_back</i>
@@ -227,18 +276,52 @@
                     <i class="material-icons" onclick="next_pose();">arrow_forward</i>
                 </div>
                 <div class="col s2">
-                    <i class="material-icons" onclick="alert('TODO')">file_download</i>
-                </div>
+                    <i class="material-icons" onclick="window.open('https://figurosity.com/figure-drawing-poses/'+g_v_showing.id);">open_in_new</i>
+                </div>                 
                 <div class="col s2">
                     <i class="material-icons" onclick="quickPose_end();showUI(g_s_ui_last);">exit_to_app</i>
                 </div>
             </div>
         </div>
+
+         <div class="container blue lighten-1 text-center row hide" id='sets'>
+            <div class="-header col s12">
+                <img src="">
+            </div>
+            <div class="-cover_list">
+            </div>
+         </div>
+
         <div class="container blue lighten-1 text-center" id='main'>
             <div class="row">
-                <div class="col s12">figurosity</div>
-                <div class="col s6" onclick="_view('quick-pose');">1> QUICK POSES</div>
-                <div class="col s6" onclick="_view('pose-search');">2> POSE SEARCH</div>
+                <div class="col s12"><h4>figurosity</h4></div>
+                <div class="col s6" onclick="_view('quick-pose');"><h5>1> QUICK POSES</h5></div>
+                <div class="col s6" onclick="_view('pose-search');"><h5>2> POSE SEARCH</h5></div>
+                <!-- <div class="col s12" onclick="_view('quick-pose');">
+                    <h5>SETS OF POSES</h5>
+                    <img src="images/SETS OF POSES.jpg">
+                </div> -->
+<div class="col s12" onclick="_view('dogs');">
+                    <h5>DOGS</h5>
+                    <img src="images/dogs.jpg">
+                </div>                
+<div class="col s12" onclick="_view('horses');">
+                    <h5>HORSES</h5>
+                    <img src="images/horses.jpg">
+                </div>                
+<div class="col s12" onclick="_view('martial-arts-poses');">
+                    <h5>MARTIAL ARTS POSES</h5>
+                    <img src="images/martial-arts-poses.jpg">
+                </div>                
+<div class="col s12" onclick="_view('superhero-poses');">
+                    <h5>SUPERHERO POSES</h5>
+                    <img src="images/superhero-poses.jpg">
+                </div>                
+                <div class="col s12" onclick="_view('girls-with-guns-poses');">
+                    <h5>GIRLS WITH GUNS POSES</h5>
+
+                    <img src="images/girls-with-guns-poses.jpg"></div>
+
             </div>
         </div>
         <div class="container text-center hide" id="quick-pose">
@@ -332,18 +415,95 @@
 			    </div>	    
 			  </div> -->
             <div class="divider"></div>
-            <div class="row" data-disable="true">
+            <div class="row" data-disable="true" style="margin-top: 10px;">
                 <div class="col s12" data-disable="true">
                 	<a class="waves-effect waves-light btn-large" href="javascript: showUI('main');">BACK</a>
-                    <a class="waves-effect waves-light btn-large" href="javascript: quickPose_preload();" id="btn-start">START</a>
+                    <a class="waves-effect waves-light btn-large" href="javascript: saveQuickPose();quickPose_preload();" id="btn-start">START</a>
                 </div>
             </div>
         </div>
+
+
+
+<!-- 弹窗插件 -->
+
+ <!--普通弹窗-->
+ <div class="hsycms-model-mask" id="mask-alert"></div>
+ <div class="hsycms-model hsycms-model-alert" id="alert">
+   <div class="hscysm-model-title">温馨提示</div>
+   <div class="hsycms-model-text">这里是内容</div>
+   <div class="hsycms-model-btn">
+    <button type="button ok">确定</button>
+   </div>
+ </div>
+
+ <!--提示弹窗-->
+ <div class="hsycms-model-mask" id="mask-tips"></div>
+ <div class="hsycms-model hsycms-model-tips" id="tips">
+ <div class="hsycms-model-text">这里是提示内容</div>
+ </div>
+
+ <!--询问弹窗-->
+ <div class="hsycms-model-mask" id="mask-confirm"></div>
+ <div class="hsycms-model hsycms-model-confirm" id="confirm">
+   <div class="hscysm-model-title">温馨提示</div>
+   <div class="hsycms-model-text">确定要操作？</div>
+   <div class="hsycms-model-btn">
+    <button type="button" class="cancel">取消</button>
+    <button type="button" class="ok">确定</button>
+   </div>
+ </div>
+
+<div class="hsycms-model-mask" onclick="hsycms.closeAll()" id="mask-model"></div>
+ <div class="hsycms-model hsycms-model-model" id="model">
+  <div class="hscysm-model-title">自定义弹窗</div>
+  <div class="hsycms-model-content"></div>
+</div> 
+
+
+<!--提交成功-->
+<div class="hsycms-model-mask" id="mask-success"></div>
+<div class="hsycms-model hsycms-model-success" id="success">
+ <div class="hsycms-model-icon">
+  <svg width="50" height="50">
+   <circle class="hsycms-alert-svgcircle"  cx="25" cy="25" r="24" fill="none" stroke="#238af4" stroke-width="2"></circle>   
+   <polyline class="hsycms-alert-svggou" fill="none" stroke="#238af4" stroke-width="2.5" points="14,25 23,34 36,18" stroke-linecap="round" stroke-linejoin="round" />
+ </svg>
+ </div>
+ <div class="hsycms-model-text">操作成功</div>
+</div>
+
+<!--提交失败-->
+<div class="hsycms-model-mask" id="mask-error"></div>
+<div class="hsycms-model hsycms-model-error" id="error">
+ <div class="hsycms-model-icon">
+  <svg width="50" height="50">
+   <circle class="hsycms-alert-svgcircle"  cx="25" cy="25" r="24" fill="none" stroke="#f54655" stroke-width="2"></circle>   
+   <polyline class="hsycms-alert-svgca1" fill="none" stroke="#f54655" stroke-width="2.5" points="18,17 32,35" stroke-linecap="round" stroke-linejoin="round" />
+   <polyline class="hsycms-alert-svgca2" fill="none" stroke="#f54655" stroke-width="2.5" points="18,35 32,17" stroke-linecap="round" stroke-linejoin="round" />
+ </svg>
+ </div>
+ <div class="hsycms-model-text">操作失败</div>
+</div>
+
+<!--这是Loading-->
+<div class="hsycms-model-mask" id="mask-loading"></div>
+<div class="hsycms-model hsycms-model-loading" id="loading" onclick="setLoading(false);cancelLoading();">
+ <div class="hsycms-model-load">
+   <span></span>
+   <span></span>
+   <span></span>
+ </div>
+ <div class="hsycms-model-text">正在加载</div>
+</div>
     </body>
     <script src="js/jquery.min.js"></script>
     <script src="js/until.js"></script>
     <script src="js/x0popup.min.js"></script>
+    <script src="js/hsycmsAlert.js"></script>
+
     <script src="js/materialize.min.js"></script>
     <script src="js/imagesloaded.min.js"></script>
+    <script src="js/lazyload.min.js"></script>
     <script src="js/index.js"></script>
 </html>

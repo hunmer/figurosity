@@ -3,6 +3,11 @@
 	cursor: pointer;
 }
 
+
+:not(img) {
+    user-select: none;
+}
+
 #viewer {
 	margin-top: 10px;
 }

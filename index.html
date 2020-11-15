@@ -50,7 +50,26 @@
                         <input type="checkbox" class="filled-in" id='autoload-thumbs'/>
                         <span>autoloadThumbs</span>
                       </label>                        
-                    </div>                    
+                    </div>         
+                           <div class="input-field col s12">
+                        <select id="viewer-click-action">
+                          <option value="0">Choose your option</option>
+                          <option value="1">stop/pause</option>
+                          <option value="2">next</option>
+                        </select>
+                        <label>viewer-on-click</label>               
+                    </div>       
+<div class="input-field col s12">
+Dark-Mode<br>  
+                     <div class="switch">
+    <label>
+      Off
+      <input type="checkbox" id='dark-mode' onchange="switchDarkMode();">
+      <span class="lever"></span>
+      On
+    </label>
+  </div>
+                    </div>                           
                 </div>
                 <div class="modal-footer">
       <a href="javascript: applySetting()" class="modal-close waves-effect waves-green btn-flat">Apply</a>
@@ -268,7 +287,7 @@
 		    <li><a href="javascript: setEyeLevel('Bird')">Bird's</a></li>
 		    <li><a href="javascript: setEyeLevel('Worm')">Worm's</a></li>
 		  </ul>		 -->
-                <img>
+                <img onclick="viewer_click();">
             </div>
             <div class="row _control">
                 <div class="_header">
@@ -320,7 +339,7 @@
 
         <div class="container blue lighten-1 text-center" id='main'>
             <div class="row">
-                <div class="col s12"><h4>figurosity</h4></div>
+                <div class="col s12"><h4><a target="_blank" href='https://github.com/hunmer/figurosity'>figurosity</a></h4></div>
                 <div class="col s6" onclick="_view('quick-pose');"><h5>1> QUICK POSES</h5></div>
                 <div class="col s6" onclick="_view('pose-search');"><h5>2> POSE SEARCH</h5></div>
                 <div class="col s12" onclick="_view('favorites');"><h5>3> FAVORITES</h5></div>
@@ -432,11 +451,10 @@
             <div class="section" id="load_count" data-mult=false style="display: none">
                 <h5>load amount</h5>
                 <div class="row">
-                   <input type="number" value="100">
+                   <input type="number" value="30">
                 </div>
             </div>            
-
-            <div class="divider"></div>
+            <p></p>
 
             <!-- <div class="section" id="light_direction" data-mult=true>
 			    <h5>LIGHT DIRECTION</h5>

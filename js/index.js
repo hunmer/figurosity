@@ -6,7 +6,9 @@ var g_localKey = 'figurosity_';
 var g_config = local_readJson('config', {
     thumb_size: 512,
     image_size: 512,
-    autoloadThumbs: false
+    autoloadThumbs: false,
+    viewer_on_click: 0,
+    dark_mode: false,
 });
 
 var g_v_quickPose = local_readJson('quickPose', {
@@ -41,7 +43,9 @@ var g_i_loading_last = 0;
 var g_s_ui_last = 'main';
 // 返回到的ui
 $(function() {
-
+    if(g_config.dark_mode){
+        switchDarkMode();
+    }
     if(window.location.protocol == 'file:'){
         $('#option-Image-Size,#option-Thumb-Image-Size,a[href="#modal_fitler"], #option-autoload-thumbs,  #camera_angle, #models, #gender').hide();
         $('#load_count').show();
@@ -116,6 +120,18 @@ $(function() {
     // openModal('#modal_setting');
     //showUI('ui_viewer');
 });
+
+function viewer_click(){
+    switch(g_config.viewer_on_click){
+        case '1':
+            stop();
+            break;
+
+        case '2':
+            next_pose();
+            break;
+    }
+}
 
 function saveQuickPose() {
     for (let key of Object.keys(g_v_quickPose)) {
@@ -468,7 +484,6 @@ function quickPose_load(data) {
         }
         if (!g_v_cd.stop) {
             var sec = --g_v_cd.main;
-            $('#_sec').html(_s1(sec));
 
             if (sec < 0) {
                 if (g_v_cd.next_default > 0) {
@@ -479,6 +494,9 @@ function quickPose_load(data) {
                 }
                 stop(true);
                 next_pose(true);
+            }else{
+                let s = _s1(sec);
+                $('#_sec').html(s == '' ? '<i class="material-icons">refresh</i>' : s);
             }
         }
 
@@ -515,6 +533,21 @@ function quickPose_load(data) {
 
     // start_countDown();
 }
+
+var g_v_style;
+function switchDarkMode(){
+    if(g_v_style === undefined){
+         g_v_style = insertStyle(`
+                * {
+                    background-color: #2f2f2f !important;
+                    color: #c5c5c5 !important;
+                }`);        
+     }else{
+        g_v_style.remove();
+        g_v_style = undefined;
+     }
+}
+
 function getDefaultModel(){
     return  $('#model-Always').prop("checked") ? $('#dropdown1 .active').attr('data-value') : 'normal';
 }
@@ -1000,7 +1033,9 @@ function openModal(type){
         case '#modal_setting':
             $('#Thumb-Image-Size option[value="'+g_config.thumb_size+'"]')[0].selected = true;
             $('#Image-Size option[value="'+g_config.image_size+'"]')[0].selected = true;
+            $('#viewer-click-action option[value="'+g_config.viewer_on_click+'"]')[0].selected = true;
             $('#autoload-thumbs').prop("checked", g_config.autoloadThumbs);
+            $('#dark-mode').prop("checked", g_config.dark_mode);
             break;
 
         default:
@@ -1012,6 +1047,8 @@ function openModal(type){
 function applySetting(){
    g_config.thumb_size = $('#Thumb-Image-Size').val();
    g_config.image_size = $('#Image-Size').val();
+   g_config.viewer_on_click = $('#viewer-click-action').val();
    g_config.autoloadThumbs = $('#autoload-thumbs').prop('checked');
+   g_config.dark_mode = $('#dark-mode').prop('checked');
    local_saveJson('config', g_config);
 }

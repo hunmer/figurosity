@@ -85,3 +85,18 @@ function shuffle(arr, max = 100){
     }
     return res;
 }
+
+function insertStyle(cssText) {
+    var head = document.getElementsByTagName("head")[0];
+    var style = document.createElement("style");
+    var rules = document.createTextNode(cssText);
+    style.type = "text/css";
+    if (style.styleSheet) {
+        style.styleSheet.cssText = rules.nodeValue;
+    } else {
+        style.appendChild(rules);
+    }
+    head.appendChild(style);
+    return style;
+}
+

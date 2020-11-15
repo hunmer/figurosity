@@ -26,7 +26,7 @@
     <body>
         <div class="modal" id="modal_setting">
             <div class="modal-content">
-             <div class="input-field col s12">
+             <div class="input-field col s12" id='option-Image-Size'>
                   <select id="Image-Size">
                   <option value="" disabled >Choose your option</option>
                   <option value="512">512</option>
@@ -35,7 +35,7 @@
                 </select>
                 <label>Image-Size</label>
             </div>
-         <div class="input-field col s12">
+         <div class="input-field col s12" id='option-Thumb-Image-Size'>
                         <select id="Thumb-Image-Size">
                           <option value="" disabled >Choose your option</option>
                           <option value="100">100</option>
@@ -44,7 +44,13 @@
                           <option value="2048">2048</option>
                         </select>
                         <label>Thumb-Image-Size</label>
-                    </div>            
+                    </div>     
+<div class="input-field col s12" id='option-autoload-thumbs'>
+                        <label>
+                        <input type="checkbox" class="filled-in" id='autoload-thumbs'/>
+                        <span>autoloadThumbs</span>
+                      </label>                        
+                    </div>                    
                 </div>
                 <div class="modal-footer">
       <a href="javascript: applySetting()" class="modal-close waves-effect waves-green btn-flat">Apply</a>
@@ -192,17 +198,31 @@
                 <a href="#modal_fitler" class="modal-trigger">
                     <i class="material-icons right medium">search</i>
                 </a>
-                <span id="_count" class="text-center">Loading...</span>
+                <span class="text-center -count">Loading...</span>
                 <div class="divider"></div>
             </div>
-            <div class="row" id="_list"></div>
+            <div class="row -list"></div>
         </div>
+
+        <div class="container hide" id="pose-favorites">
+            <div class="_flex_navbar teal lighten-2">
+                <a href="javascript: showUI('main')" class="modal-trigger">
+                    <i class="material-icons medium">arrow_back</i>
+                </a>
+                <a href="#modal_fitler" class="modal-trigger">
+                    <i class="material-icons right medium">search</i>
+                </a>
+                <span class="text-center -count">Loading...</span>
+                <div class="divider"></div>
+            </div>
+            <div class="row -list"></div>
+        </div>        
         <div class="container text-center hide" id="ui_viewer">
             <div id="viewer">
                 <span id='_sec-next' class="hide">3</span>
                 <div class="row" id="_status">
                     <div class="col s2">
-                        <span id='_playSec'></span>
+                        <span id='_playSec'>00:00</span>
                     </div>
                     <div class="col s2" onclick="turnRight()">
                         <i class="material-icons">rotate_left</i>
@@ -236,6 +256,12 @@
                     <li data-value='smooth'>
                         <a href="javascript: setModel('smooth')">Smooth</a>
                     </li>
+                    <li style="padding: 10px;">
+                        <label>
+                        <input type="checkbox" class="filled-in" id='model-Always'/>
+                        <span>Always</span>
+                      </label>
+                    </li>                    
                 </ul>
                 <!-- <ul id='dropdown2' class='dropdown-content'>
 		    <li><a href="javascript: setEyeLevel('Street')">Street</a></li>
@@ -264,7 +290,7 @@
                     <i class="material-icons" onclick="offset_next();">arrow_forward</i>
                 </div>
                 <div class="col s2">
-                    <i class="material-icons" id='favorite' onclick="favorite($('favorite'));">favorite_border</i>
+                    <i class="material-icons" id='favorite' onclick="favorite($('#favorite'));">favorite_border</i>
                 </div>
                 <div class="col s2">
                     <i class="material-icons" onclick="prev_pose()">arrow_back</i>
@@ -297,6 +323,7 @@
                 <div class="col s12"><h4>figurosity</h4></div>
                 <div class="col s6" onclick="_view('quick-pose');"><h5>1> QUICK POSES</h5></div>
                 <div class="col s6" onclick="_view('pose-search');"><h5>2> POSE SEARCH</h5></div>
+                <div class="col s12" onclick="_view('favorites');"><h5>3> FAVORITES</h5></div>
                 <!-- <div class="col s12" onclick="_view('quick-pose');">
                     <h5>SETS OF POSES</h5>
                     <img src="images/SETS OF POSES.jpg">
@@ -337,6 +364,7 @@
                     <div class="col s2" id="_custom-time" onclick="confirm_setCustomTime()">diy</div>
                 </div>
             </div>
+           
             <div class="divider"></div>
             <div class="section" id="camera_angle" data-mult=true>
                 <h5>CAMERA ANGLE</h5>
@@ -401,6 +429,15 @@
                 </div>
             </div>
             <div class="divider"></div>
+            <div class="section" id="load_count" data-mult=false style="display: none">
+                <h5>load amount</h5>
+                <div class="row">
+                   <input type="number" value="100">
+                </div>
+            </div>            
+
+            <div class="divider"></div>
+
             <!-- <div class="section" id="light_direction" data-mult=true>
 			    <h5>LIGHT DIRECTION</h5>
 				<div class="row">

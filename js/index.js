@@ -5,7 +5,8 @@ var g_localKey = 'figurosity_';
 // 本地储存前缀
 var g_config = local_readJson('config', {
     thumb_size: 512,
-    image_size: 512
+    image_size: 512,
+    autoloadThumbs: false
 });
 
 var g_v_quickPose = local_readJson('quickPose', {
@@ -41,6 +42,10 @@ var g_s_ui_last = 'main';
 // 返回到的ui
 $(function() {
 
+    if(window.location.protocol == 'file:'){
+        $('#option-Image-Size,#option-Thumb-Image-Size,a[href="#modal_fitler"], #option-autoload-thumbs,  #camera_angle, #models, #gender').hide();
+        $('#load_count').show();
+    }
     window.history.pushState(null, null, "#");
     window.addEventListener("popstate", function(event) {
         window.history.pushState(null, null, "#");
@@ -82,6 +87,9 @@ $(function() {
                 var type;
                 var now = new Date().getTime() / 1000;
                 if (!g_b_loading && now - g_i_loading_last >= 3) {
+                    if (!$('#pose-favorites').hasClass('hide')) { // 收藏夹是一次显示完毕
+                        return;
+                    }else                    
                     if (!$('#pose-search').hasClass('hide')) {
                         type = 'pose-search';
                     }else
@@ -234,63 +242,137 @@ function confirm_setCustomTime() {
         }
     });
 }
-
+var g_dirs = [];
 var g_b_stopAjax = false;
+
+function loadJs(file, success = function(){}, fail = function(){}){
+    var D = document;
+    var scriptNode = D.createElement('script');
+    scriptNode.type = "text/javascript";
+    scriptNode.src = file;
+    var targ = D.getElementsByTagName('head')[0] || D.body || D.documentElement;
+    targ.appendChild(scriptNode);
+    scriptNode.onload = function() {
+        success();
+    }    
+    scriptNode.onabort = function() {
+        fail();
+    }   
+    return scriptNode;         
+}
+function loadLocalData(success = function(){}, fail = function(){}){
+    loadJs('./figurosity.js', function(){
+        console.log(g_dirs.length);
+        success();
+    }, function(){
+        fail();
+    });
+}
 
 function quickPose_preload() {
     setLoading(true);
-    var url = g_s_api+'api.php?type=quick-pose&data=' + getQuickPoseParams();
-    g_ajax = $.ajax({
-        url: url,
-        method: 'GET',
-        // async: false,
-        dataType: 'json',
-        success: function(json) {
-            if(g_b_stopAjax){g_b_stopAjax = false; return};
-            data_load('quickpose', json);
-        }
-    }).always(function() {
-        //setLoading(false);
-    });
+    if (window.location.protocol == 'file:') {
+        loadLocalData(function(){
+            if(g_dirs.length === 0){
+                setLoading(false);
+                return alert('请先运行 "点我更新figurosity图片目录.exe" 程序再使用此功能!');
+            }            
+            var json = {
+                data: shuffle(g_dirs, $('#load_count input').val())
+            };
+            data_load('quickpose', json);      
+                  
+        }, function(){
+            setLoading(false);
+            alert('加载数据失败!');
+        });
+    }else{
+        var url = g_s_api+'api.php?type=quick-pose&data=' + getQuickPoseParams();
+        g_ajax = $.ajax({
+            url: url,
+            method: 'GET',
+            // async: false,
+            dataType: 'json',
+            success: function(json) {
+                if(g_b_stopAjax){g_b_stopAjax = false; return};
+                data_load('quickpose', json);
+            }
+        }).always(function() {
+            //setLoading(false);
+        });        
+    }
+   
 }
 
 var g_v_poses = [];
 //加载的pose列表
 
+var g_i_list_index = 0; // 本地列表查看的索引
 function data_query(type) {
     switch(type){
         case 'pose-search':
-            $('#_count').html('Loading...');
+            $('#'+type+' .-count').html('Loading...');
             break;
+
+        case 'pose-favorites':
+            $('#pose-favorites .-list').html('');
+            var data = {data: []};
+            for(var d in g_v_favorites){
+                data.data.push(d.replace('id-', ''));
+            }
+            data_load(type, data);
+            return;
     }
-    var url = g_s_api+'api.php?type='+g_api.type+'&data=' + getSearchPoseParams();
-    g_i_loading_last = new Date().getTime() / 1000; // 防止直接进入页尾触发刷新
-
-    setLoading(true);
-    g_ajax = $.ajax({
-        url: url,
-        method: 'GET',
-        // async: false,
-        dataType: 'json',
-        success: function(json) {
-            if(g_b_stopAjax){g_b_stopAjax = false; return};
+    if (window.location.protocol == 'file:') {
+        loadLocalData(function(){
+            if(g_dirs.length === 0){
+                setLoading(false);
+                return alert('请先运行 "点我更新figurosity图片目录.exe" 程序再使用此功能!');
+            }           
+            var start = g_i_list_index;
+            g_i_list_index += 30;
+            var json = {
+                data: g_dirs.slice(start, g_i_list_index)
+            };
             data_load(type, json);
-        }
+            setLoading(false);
+        }, function(){
+            setLoading(false);
+            alert('加载数据失败!');
+        });        
+    }else{
+        var url = g_s_api+'api.php?type='+g_api.type+'&data=' + getSearchPoseParams();
+        g_i_loading_last = new Date().getTime() / 1000; // 防止直接进入页尾触发刷新
 
-    }).always(function() {
-        $('#btn-search').html('SEARCH');
-        setLoading(false);
-    });
+        setLoading(true);
+        g_ajax = $.ajax({
+            url: url,
+            method: 'GET',
+            // async: false,
+            dataType: 'json',
+            success: function(json) {
+                if(g_b_stopAjax){g_b_stopAjax = false; return};
+                data_load(type, json);
+            }
+
+        }).always(function() {
+            $('#btn-search').html('SEARCH');
+            setLoading(false);
+        });        
+    }
+    
 }
 
 function data_load(type, json){
+    console.log(json);
     var selecter;
     switch(type){
         case 'pose-search':
-            g_s_ui_last = 'pose-search';
+        case 'pose-favorites':
+            g_s_ui_last = type;
             // total: 7633 total_pages: 191
-            selecter = '#_list';
-            $('#_count').html(json.poses.meta.total + ' Poses'); 
+            selecter = '#'+type+' .-list';
+            $('#'+type+' .-count').html((window.location.protocol == 'file:' ? type == 'pose-favorites' ? json.data.length : g_dirs.length : json.poses.meta.total) + ' Poses'); 
             break;
 
         case 'dogs':
@@ -313,10 +395,18 @@ function data_load(type, json){
             return quickPose_load(json.data);
     }
     var html = '';
-    for (var d of json.poses !== undefined ? json.poses.data : json.data) {
+    var data = json.poses != undefined ? json.poses.data : json.data;
+    for (var d of data) {
+        if(typeof(d) !== 'object'){ // 本地数据
+            d = {
+                id: d,
+                uuid: d
+            };
+        }
         g_v_poses["id-" + d.id] = d;
         html = html + `<div class="col s6">
-        <img class="lazyload" onclick="loadViewer(` + d.id + `)" src="images/loading.gif" data-src="` + getImageUrl(d.uuid, 'normal').replace('{size}', g_config.thumb_size).replace('{offset}', '00') + `">
+        <img class="lazyload" onclick="loadViewer(` + d.id + `)" src="images/loading.gif" data-src="` + getImageUrl(d.uuid, 'normal').replace('{size}', g_config.thumb_size).replace('{offset}', getOffsetString('00')) + `">
+        <p>`+d.id+`</p>
     </div>`;
     }
     $(selecter).append(html);    
@@ -345,7 +435,6 @@ var g_v_cd = {
 
 var g_quickPose = {};
 function quickPose_load(data) {
-
     g_s_ui_last = 'main';
     g_quickPose = data;
     g_quickPose.index = 0;
@@ -363,13 +452,13 @@ function quickPose_load(data) {
     var t;
     g_v_timer.quick_pose = setInterval(function() {
         g_v_cd.playTime++;
-        $('#_playSec').html(_s1(g_v_cd.playTime));
+        $('#_playSec').html(getTimeString(g_v_cd.playTime));
 
         t = g_v_cd.next;
         if (t > 0) {
             $('#_sec-next').html(_s1(t));
             if (--g_v_cd.next == 0) {
-                g_v_cd.stop = true;
+                stop(true);
                 // 稍微延迟看起来更自然
                 setTimeout(function() {
                     next_pose(true);
@@ -388,7 +477,7 @@ function quickPose_load(data) {
                     $('#_sec-next').html('').removeClass('hide');
                     return;
                 }
-                g_v_cd.stop = true;
+                stop(true);
                 next_pose(true);
             }
         }
@@ -400,11 +489,17 @@ function quickPose_load(data) {
     g_a_offsets = [];
     var offset, key, img, model = '', size = g_config.image_size;
     for (var d of data) {
-        offset = _s(randNum(0, 32));
+        if(typeof(d) !== 'object'){ // 本地数据
+            d = {
+                id: d,
+                uuid: d
+            };
+        }      
+        offset = getOffsetString(randNum(0, 32));
         // TODO 随机
         g_a_offsets["id-" + d.id] = offset;
-        model = 'normal';
-        if (g_v_viewing.model != 'normal') {
+        model = getDefaultModel();
+        if (g_v_viewing.model != 'normal' && d.states != undefined) {
             // 默认的不用找
             for (var m of d.states) {
                 if (m.type == g_v_viewing.model) {
@@ -420,8 +515,14 @@ function quickPose_load(data) {
 
     // start_countDown();
 }
+function getDefaultModel(){
+    return  $('#model-Always').prop("checked") ? $('#dropdown1 .active').attr('data-value') : 'normal';
+}
 
 function getImageUrl(uuid, model) {
+    if (window.location.protocol == 'file:') {
+        return '../figurosity/'+uuid+'/'+model + '/{offset}.jpg';
+    }
     return 'https://love.figurosity.com/muses/' + uuid.substr(0, 2) + '/' + uuid.substr(2, 2) + '/' + uuid.substr(4, 2) + '/' + uuid + '/' + model + '/{size}/pose-{offset}.jpg';
 }
 
@@ -527,23 +628,33 @@ var g_a_offsets = [];
 // 预先加载的offset - quickpose
 
 function loadId(json) {
+    if(typeof(json) !== 'object'){ // 本地数据
+        json = {
+            id: json,
+            uuid: json
+        };
+    }          
     $('#_sec').html('<i class="material-icons">refresh</i>');
     g_v_viewing = {
         'data': json,
-        'model': 'normal',
+        'model': getDefaultModel(),
         'eyeLevel': 'Street'
     };
     g_v_cd.main = g_v_cd.default;
     // 读取预先随机生成的offset
 
     var offset = g_a_offsets["id-" + json.id] == undefined ? 0 : g_a_offsets["id-" + json.id];
-    loadImage(json.id, json.uuid, offset);
+    loadImage(json.id, json.uuid, offset, '', g_v_viewing.model);
     // {"id":5,"name":"Mei Lin","slug":"mei-lin","machine_name":"mei-lin","gender_id":111}
     //model.name;	
 
                 
     var arr1 = [], dom;
-    for(var d of json.states) arr1.push(d.type);
+    if(json.states == undefined){ // 本地没有数据记录
+        arr1 = ["normal", "nude", "muscle", "smooth"];
+    }else{
+        for(var d of json.states) arr1.push(d.type);
+    }
     for(var skin of ["normal", "nude", "muscle", "smooth"]){
         dom = $('#dropdown1 li[data-value="'+skin+'"]');
         if(g_api.type != 'quick-pose' && arr1.indexOf(skin) === -1){
@@ -572,7 +683,7 @@ function loadImage(id, uuid, offset='00', size='', model='normal') {
         $('#favorite').html('favorite_border');
     }
 
-    offset = _s(offset);
+    offset = getOffsetString(offset);
     var img = getImageUrl(uuid, model);
     var key = model + '-' + offset + '-' + size;
     if (g_a_preloadImages[id] !== undefined && g_a_preloadImages[id][key] !== undefined && g_a_preloadImages[id][key][1]) {
@@ -583,21 +694,30 @@ function loadImage(id, uuid, offset='00', size='', model='normal') {
             checkAutoStart();
         });
     } else {
-        g_v_timer.stop = true; // 先暂停
-        imageLoader($('#viewer img').attr('src', img.replace('{size}', 100).replace('{offset}', offset)), function(){
-             g_v_timer.stop = false;
-        });
-        // 略缩图
-
-        preloadImage_single(img.replace('{size}', size).replace('{offset}', offset));
-        if (false) { // TODO
-            // preload all images
-            for (var i = 0; i <= 32; i++) {
-                preloadImage(id, model + '-' + _s(i) + '-100', img.replace('{size}', 100).replace('{offset}', _s(i)));
-                preloadImage(id, model + '-' + _s(i) + '-' + size, img.replace('{size}', size).replace('{offset}', _s(i)));
+        g_v_cd.stop = true // 先暂停
+        if($('#pause').html() == 'play_arrow'){ // 倒计时中,没有人为暂停
+            if (window.location.protocol !== 'file:') {
+                 imageLoader($('#viewer img').attr('src', img.replace('{size}', 100).replace('{offset}', offset)), function(){
+                    console.log('11');
+                              g_v_cd.stop = false;
+                        });     
             }
         }
+        // 
+        preloadImage_single(img.replace('{size}', size).replace('{offset}', offset));
     }
+    if (g_v_viewing.thumbs == undefined && $('#autoload-thumbs').prop('checked')) { // 加载略缩图
+        g_v_viewing.thumbs = true;
+        // preload all images
+        for (var i = 0; i <= 32; i++) {
+            preloadImage(id, model + '-' + _s(i) + '-100', img.replace('{size}', 100).replace('{offset}', _s(i)));
+           // preloadImage(id, model + '-' + _s(i) + '-' + size, img.replace('{size}', size).replace('{offset}', _s(i)));
+        }
+    }    
+}
+
+function getOffsetString(offset){
+    return window.location.protocol == 'file:' ? parseInt(offset) : _s(offset);
 }
 
 // TODO
@@ -620,6 +740,9 @@ function imageLoader(dom, f) {
 
 function setModel(model) {
     if (model != g_v_viewing.model) {
+        $('.active').removeClass('active');
+        $('#dropdown1 li[data-value="'+model+'"]').addClass('active');
+
         g_v_viewing.model = model;
         $('._control ._title').html('Loading ' + model);
         initImage();
@@ -638,7 +761,7 @@ function initImage(thumb=false) {
 }
 
 function event_rangeChange(thumb=false) {
-    g_v_viewing.offset = _s($('#range').val());
+    g_v_viewing.offset = getOffsetString($('#range').val());
     initImage(thumb);
 }
 
@@ -664,17 +787,26 @@ function _view(name) {
             f = function(){
                 showUI('pose-search');
                 if (g_v_poses.length == 0) {
-                    pose_search();
+                    data_query('pose-search');
                 }                
             }
             
             break;
+
+        case 'favorites':
+            g_api.paramType = 'favorites';
+            f = function(){
+                showUI('pose-favorites');
+                data_query('pose-favorites');
+            }
+            break;        
 
         case 'dogs':
         case 'horses':
         case 'superhero-poses':
         case 'martial-arts-poses':
         case 'girls-with-guns-poses':
+            if(window.location.protocol == 'file:') return alert('本地端暂不支持,可以在网页版查看!');
             g_api.paramType = 'Drawing references';
             f = function(){
                 g_v_poseSearch[g_api.paramType]['slug'] = name;
@@ -706,6 +838,7 @@ function offset_prev() {
 }
 
 function setOffset(offset) {
+    g_b_autoStart = false; // 在调整的时候不自动开始计时
     $('#range').val(offset).focus();
     g_v_viewing.offset = offset;
     initImage();
@@ -717,11 +850,13 @@ g_v_image_single.onload = function() {
     $('#viewer img').attr('src', this.src).css('opacity', 1);
     $('._control ._title').html('');
     setLoading(false);
-    start_countDown();
+    if($('#pause').html() == 'pause'){
+        start_countDown();
+    }
 }
 
 function checkAutoStart(){
- if(g_b_autoStart){
+ if($('#pause').html() == 'pause' && g_b_autoStart) {
         g_b_autoStart = false;
         start_countDown();
     }
@@ -863,9 +998,9 @@ function setRotate(rotate){
 function openModal(type){
     switch(type){
         case '#modal_setting':
-            console.log(g_config);
             $('#Thumb-Image-Size option[value="'+g_config.thumb_size+'"]')[0].selected = true;
             $('#Image-Size option[value="'+g_config.image_size+'"]')[0].selected = true;
+            $('#autoload-thumbs').prop("checked", g_config.autoloadThumbs);
             break;
 
         default:
@@ -877,5 +1012,6 @@ function openModal(type){
 function applySetting(){
    g_config.thumb_size = $('#Thumb-Image-Size').val();
    g_config.image_size = $('#Image-Size').val();
+   g_config.autoloadThumbs = $('#autoload-thumbs').prop('checked');
    local_saveJson('config', g_config);
 }

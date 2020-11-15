@@ -255,7 +255,7 @@ function loadJs(file, success = function(){}, fail = function(){}){
     scriptNode.onload = function() {
         success();
     }    
-    scriptNode.onabort = function() {
+    scriptNode.onerror = function() {
         fail();
     }   
     return scriptNode;         
@@ -284,7 +284,7 @@ function quickPose_preload() {
                   
         }, function(){
             setLoading(false);
-            alert('加载数据失败!');
+            alert('请先运行 "点我更新figurosity图片目录.exe" 程序再使用此功能!');
         });
     }else{
         var url = g_s_api+'api.php?type=quick-pose&data=' + getQuickPoseParams();
@@ -856,7 +856,7 @@ g_v_image_single.onload = function() {
 }
 
 function checkAutoStart(){
- if($('#pause').html() == 'pause' && g_b_autoStart) {
+ if(g_b_autoStart) {
         g_b_autoStart = false;
         start_countDown();
     }
